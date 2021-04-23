@@ -107,9 +107,9 @@
 
 (comment
   (let [coffee-machine (create-coffee-machine
-                        {:coffees (into [] {"Affogato" 1.00
-                                            "Caffè Latte" 1.50
-                                            "Caffè Mocha" 2.00})
+                        {:coffees {"Affogato" 1.00
+                                   "Caffè Latte" 1.50
+                                   "Caffè Mocha" 2.00}
                          :available-coins [0.50 1.00 0.10 0.25]})]
     (request-coffee coffee-machine :caffe-latte 2.10)))
 

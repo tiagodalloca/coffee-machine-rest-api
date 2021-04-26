@@ -19,17 +19,14 @@
    ["/brew-coffee"
     {:post
      {:parameters {:body [:map [:coffee-id keyword?] [:money double?]]}
-      :responses {200 {:body
-                       [:map
-                        [:coffee-instance
-                         [:map [:name string?] [:price double?] [:created-at string?]]]
-                        [:change [:map-of double? int?]]
-                        [:change-value double?]]}}
       :handler (fn [{{{:keys [coffee-id money]} :body} :parameters :as request}]
-                 @(events/dispatch-event
-                   emitter
-                   [::brew-coffee coffee-id money]
-                   {:enforce-handler true}))}}]])
+                 (let [event-ret @(events/dispatch-event
+                                   emitter
+                                   [::brew-coffee coffee-id money]
+                                   {:enforce-handler true})]
+                   (if (instance? Exception event-ret)
+                     (throw event-ret)
+                     {:body event-ret})))}}]])
 
 (def ^:private options
   {:data
@@ -49,7 +46,11 @@
                  (exception/create-exception-middleware
                   (merge
                    exception/default-handlers
-                   {::exception/wrap (fn [handler e request]
+                   {clojure.lang.ExceptionInfo
+                    (fn [ex request]
+                      {:status 500
+                       :body (ex-data ex)})
+                    ::exception/wrap (fn [handler e request]
                                        (.printStackTrace e)
                                        (handler e request))}))
                  muuntaja/format-request-middleware
@@ -58,5 +59,6 @@
 
 (defn get-handler [deps]
   (let [routes (get-routes deps)]
-    (ring/router routes options)))
+    (ring/ring-handler
+     (ring/router routes options))))
 

@@ -17,7 +17,7 @@
                             :available-coins [0.50 1.00 0.10 0.25]}}
    
    ::server {:opts {:port 6942}
-             :handler (ig/ref ::router)}
+             :handler (ig/ref ::handler)}
 
    ::handler {:emitter (ig/ref ::emitter)}
 

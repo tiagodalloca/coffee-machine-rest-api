@@ -64,8 +64,8 @@
 (defn request-coffee [coffee-machine coffee-id money]
   (let [{:keys [coffees available-coins]} coffee-machine
         coffee (get coffees coffee-id)
-        coffee-name (:name coffee)
-        coffee-price (:price coffee)
+        coffee-name (or (:name coffee) ::missing-coffee-name)
+        coffee-price (or (:price coffee) 0)
         expected-change (some-> money (- coffee-price) (round-decimal 2))
         change (some-> expected-change (calc-coins-exchange available-coins))
         change-value (some->

@@ -1,2 +1,4 @@
 # coffee-machine-rest-api
-A coffee machine operating via http
+
+[Blog post about](https://tiagodalloca.github.io/blog/event-driven-coffee-machine/)
+

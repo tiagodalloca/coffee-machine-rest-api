@@ -59,6 +59,7 @@
   (let [handlers-deps {:coffee-machine-instance coffee-machine-instance}]
     (doseq [[event-t f] opts]
       (events/add-handler emitter event-t (f handlers-deps))))
+  
   args)
 
 (defmethod ig/halt-key! ::api-events-handlers [_ {:keys [emitter opts] :as args}]
